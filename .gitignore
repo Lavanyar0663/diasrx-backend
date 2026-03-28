@@ -1,5 +1,22 @@
+# Node
 node_modules/
 .env
 *.log
+dist/
+
+# IDE
 .vscode/
 .idea/
+
+# Build files
+build/
+.gradle/
+
+# Android
+local.properties
+*.iml
+.cxx/
+
+# Misc
+*.txt
+.DS_Store
