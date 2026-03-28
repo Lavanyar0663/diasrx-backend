@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:layout_marginHorizontal="12dp"
+    android:background="@drawable/bg_card_stroke_rounded"
+    android:padding="12dp">
+
+    <!-- Top Row: Avatar & Basic Info -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/ivPatientAvatarContainer"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="#F1F5F9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvAvatarInitials"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="SJ"
+            android:textColor="#64748B"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/tvPatientName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="Sarah Jenkins"
+        android:textColor="#1E293B"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tvDetailsContainer"
+        app:layout_constraintEnd_toStartOf="@+id/llLastVisit"
+        app:layout_constraintStart_toEndOf="@+id/ivPatientAvatarContainer"
+        app:layout_constraintTop_toTopOf="@+id/ivPatientAvatarContainer"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <LinearLayout
+        android:id="@+id/tvDetailsContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/ivPatientAvatarContainer"
+        app:layout_constraintStart_toStartOf="@+id/tvPatientName"
+        app:layout_constraintTop_toBottomOf="@+id/tvPatientName">
+
+        <TextView
+            android:id="@+id/tvOpdId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OPD #8921"
+            android:textColor="#64748B"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="4dp"
+            android:layout_height="4dp"
+            android:layout_marginHorizontal="8dp"
+            android:background="@drawable/bg_circle_avatar"
+            android:backgroundTint="#94A3B8" />
+
+        <TextView
+            android:id="@+id/tvAgeGender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="34y / F"
+            android:textColor="#64748B"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- NEW REG Badge (Fig. 3) -->
+    <TextView
+        android:id="@+id/tvNewRegBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_badge_new_reg"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="4dp"
+        android:text="NEW REG"
+        android:textColor="#059669"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvPatientName" />
+
+    <!-- Last Visit (Fig. 2) -->
+    <LinearLayout
+        android:id="@+id/llLastVisit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="end"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvPatientName">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LAST VISIT"
+            android:textColor="#94A3B8"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvLastVisit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Today"
+            android:textColor="#1E293B"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrierExtras"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="llVisitedExtras,llNewExtras" />
+
+    <View
+        android:id="@+id/vDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="#F1F5F9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tvPatientName"
+        app:layout_constraintTop_toBottomOf="@+id/barrierExtras" />
+
+    <!-- Visited State Extras -->
+    <LinearLayout
+        android:id="@+id/llVisitedExtras"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivPatientAvatarContainer">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@android:drawable/stat_sys_phone_call"
+            app:tint="#94A3B8" />
+
+        <TextView
+            android:id="@+id/tvPhone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="+1 (555) 012-3456"
+            android:textColor="#64748B"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/ivAction"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/colorPrimary" />
+    </LinearLayout>
+
+    <!-- New Patient Extras (Fig. 3) -->
+    <LinearLayout
+        android:id="@+id/llNewExtras"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivPatientAvatarContainer">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="16dp"
+            android:src="@android:drawable/stat_sys_phone_call"
+            app:tint="#94A3B8" />
+
+        <TextView
+            android:id="@+id/tvPhoneNew"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="+1 (555) 012-3456"
+            android:textColor="#64748B"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/ivAddFromHistory"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/colorPrimary" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

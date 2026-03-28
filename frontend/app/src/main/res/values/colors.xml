@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- DIAS Rx Brand Colors -->
+    <color name="colorPrimary">#0AE2D6</color> <!-- Cyan -->
+    <color name="colorCyan">#0AE2D6</color>
+    <color name="colorPrimaryVariant">#00B3B3</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    
+    <color name="colorSecondary">#011936</color> <!-- Navy Blue Text -->
+    <color name="colorOnSecondary">#FFFFFF</color>
+    
+    <color name="colorBackground">#F4F8FA</color> <!-- Light Blue BG -->
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorError">#B00020</color>
+    
+    <!-- UI Greys -->
+    <color name="colorTextPrimary">@color/colorSecondary</color>
+    <color name="colorTextSecondary">#7E8D9C</color>
+    <color name="colorOutline">#E0E5EA</color>
+    <color name="colorGlow">#800AE2D6</color>
+    
+    <!-- State colors for cards -->
+    <color name="colorCardUnselectedBg">#FFFFFF</color>
+    <color name="colorCardSelectedBg">#0AE2D6</color>
+
+    <color name="colorApprove">#00897B</color> <!-- Dark Green -->
+    <color name="colorReject">#FFEBEE</color> <!-- Soft Red BG -->
+    <color name="colorTextReject">#D32F2F</color> <!-- Dark Red Text -->
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Teal when checked/enabled -->
+    <item android:color="#0D9488" android:state_checked="true" />
+    <!-- Light gray when unchecked -->
+    <item android:color="#CBD5E1" />
+</selector>

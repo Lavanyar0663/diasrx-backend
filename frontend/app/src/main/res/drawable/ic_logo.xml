@@ -1,0 +1,31 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    
+    <!-- White Rounded Squircle Background -->
+    <path
+        android:pathData="M50,0 h100 c27.61,0 50,22.39 50,50 v100 c0,27.61 -22.39,50 -50,50 h-100 c-27.61,0 -50,-22.39 -50,-50 v-100 c0,-27.61 22.39,-50 50,-50 Z"
+        android:fillColor="#FFFFFF"/>
+        
+    <!-- Vertical Navy Bar -->
+    <path
+        android:pathData="M90,45 h20 c5.5,0 10,4.5 10,10 v90 c0,5.5 -4.5,10 -10,10 h-20 c-5.5,0 -10,-4.5 -10,-10 v-90 c0,-5.5 4.5,-10 10,-10 Z"
+        android:fillColor="#011936"/>
+        
+    <!-- Horizontal Cyan Bar -->
+    <path
+        android:pathData="M45,90 h110 c5.5,0 10,4.5 10,10 v2 c0,5.5 -4.5,10 -10,10 h-110 c-5.5,0 -10,-4.5 -10,-10 v-2 c0,-5.5 4.5,-10 10,-10 Z"
+        android:fillColor="#0AE2D6"/>
+        
+    <!-- Left Dot -->
+    <path
+        android:pathData="M70,101 m-2,0 a2,2 0 1,1 4,0 a2,2 0 1,1 -4,0"
+        android:fillColor="#FFFFFF"/>
+        
+    <!-- Right Dot -->
+    <path
+        android:pathData="M130,101 m-2,0 a2,2 0 1,1 4,0 a2,2 0 1,1 -4,0"
+        android:fillColor="#FFFFFF"/>
+</vector>

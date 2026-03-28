@@ -1,0 +1,13 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Frontend" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        
+        <!-- Global input text and hint styling to prevent dark mode enforcing white text on white backgrounds -->
+        <item name="android:editTextColor">@color/colorSecondary</item>
+        <item name="android:textColorHint">@color/colorTextSecondary</item>
+        <item name="colorOnSurface">@color/colorSecondary</item>
+        <item name="colorOnSurfaceVariant">@color/colorTextSecondary</item>
+    </style>
+</resources>

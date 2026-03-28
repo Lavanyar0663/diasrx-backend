@@ -1,0 +1,16 @@
+[
+  {
+    "id": 105,
+    "name": "Dr. Ken",
+    "email": "doctor_105@diasrx.com",
+    "password": "$2b$10$tUOutiCs1haAit5uLYusuOirAmLRhxPG4CiqdgFwvvVmueW5snBCm",
+    "role": "doctor",
+    "is_active": 0,
+    "otp": null,
+    "otp_expiry": null,
+    "created_at": "2026-03-22T14:39:41.000Z",
+    "updated_at": "2026-03-22T14:39:41.000Z",
+    "status": "PENDING",
+    "department": null
+  }
+]
