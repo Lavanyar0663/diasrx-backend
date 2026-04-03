@@ -1,0 +1,92 @@
+[
+  {
+    "id": 49,
+    "doctor_id": 1,
+    "patient_id": 61,
+    "status": "DISPENSED",
+    "user_id": 1,
+    "user_name": "Dulquer Jain",
+    "role": "admin"
+  },
+  {
+    "id": 50,
+    "doctor_id": 2,
+    "patient_id": 72,
+    "status": "DISPENSED",
+    "user_id": null,
+    "user_name": null,
+    "role": null
+  },
+  {
+    "id": 51,
+    "doctor_id": 2,
+    "patient_id": 72,
+    "status": "DISPENSED",
+    "user_id": null,
+    "user_name": null,
+    "role": null
+  },
+  {
+    "id": 52,
+    "doctor_id": 5,
+    "patient_id": 67,
+    "status": "DISPENSED",
+    "user_id": null,
+    "user_name": null,
+    "role": null
+  },
+  {
+    "id": 53,
+    "doctor_id": 5,
+    "patient_id": 86,
+    "status": "DISPENSED",
+    "user_id": null,
+    "user_name": null,
+    "role": null
+  },
+  {
+    "id": 54,
+    "doctor_id": 5,
+    "patient_id": 67,
+    "status": "DISPENSED",
+    "user_id": null,
+    "user_name": null,
+    "role": null
+  },
+  {
+    "id": 55,
+    "doctor_id": 4,
+    "patient_id": 81,
+    "status": "CREATED",
+    "user_id": null,
+    "user_name": null,
+    "role": null
+  },
+  {
+    "id": 56,
+    "doctor_id": 1,
+    "patient_id": 62,
+    "status": "DISPENSED",
+    "user_id": 1,
+    "user_name": "Dulquer Jain",
+    "role": "admin"
+  },
+  {
+    "id": 57,
+    "doctor_id": 1,
+    "patient_id": 82,
+    "status": "DISPENSED",
+    "user_id": 1,
+    "user_name": "Dulquer Jain",
+    "role": "admin"
+  },
+  {
+    "id": 58,
+    "doctor_id": 1,
+    "patient_id": 63,
+    "status": "DISPENSED",
+    "user_id": 1,
+    "user_name": "Dulquer Jain",
+    "role": "admin"
+  }
+]

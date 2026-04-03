@@ -1,0 +1,13 @@
+[
+  {
+    "id": 20,
+    "name": "Dr. Ken",
+    "email": "doctor_105@diasrx.com",
+    "password": null,
+    "specialization": null,
+    "phone": "1234567890",
+    "professional_title": null,
+    "avatar_url": null,
+    "user_id": 105
+  }
+]
