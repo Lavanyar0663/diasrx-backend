@@ -30,13 +30,9 @@ exports.createPrescription = async (data) => {
             );
         }
 
-        // 3. Mark patient as visited
-        await connection.query(
-            "UPDATE patients SET is_visited = 1 WHERE id = ?",
-            [patient_id]
-        );
+        // 3. (REMOVED: is_visited update now happens in dispensing)
 
-        return { prescription_id: prescriptionId, status: "PENDING" };
+        return { prescription_id: prescriptionId, status: "CREATED" };
     });
 };
 
@@ -95,6 +91,18 @@ exports.dispensePrescription = async (prescriptionId, idempotencyKey) => {
             "UPDATE prescription SET status = 'DISPENSED', updated_at = NOW() WHERE id = ?",
             [prescriptionId]
         );
+
+        // 4.1 Mark patient as visited (New workflow)
+        const [targetPatient] = await connection.query(
+            "SELECT patient_id FROM prescription WHERE id = ?",
+            [prescriptionId]
+        );
+        if (targetPatient.length > 0) {
+            await connection.query(
+                "UPDATE patients SET is_visited = 1 WHERE id = ?",
+                [targetPatient[0].patient_id]
+            );
+        }
 
         // 5. Insert dispense log for idempotency (so future retries pass the middleware but hit this success check)
         await connection.query(
