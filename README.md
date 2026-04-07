@@ -15,7 +15,7 @@ Backend API for the DIAS Rx project.
 2. Copy `.env.example` to `.env`
 3. Fill in your database, JWT, email, and CORS values
 4. Create the MySQL database
-5. Run the SQL files as needed for your environment
+5. Import `diasrx_database.sql` into MySQL/phpMyAdmin
 6. Start the server:
    `npm start`
 
@@ -37,22 +37,18 @@ See `.env.example` for the required values:
 - `EMAIL_PASS`
 - `ALLOWED_ORIGINS`
 
-## SQL Files
+## Database File
 
-The repository includes these database files:
+The repository includes a single database export:
 
-- `migration.sql`
-- `database_migration_step1.sql`
-- `dispense_logs_migration.sql`
-- `otp_migration_email.sql`
-- `seed_drugs.sql`
+- `diasrx_database.sql`
 
-Apply the files required by your database state.
+Import this file into the `diasrx` database using phpMyAdmin or MySQL CLI.
 
 ## Deployment Notes
 
 - Do not upload `.env`; set its values in your hosting platform
 - Run `npm install` during build/deploy
 - Use `npm start` as the start command
-- Provision a MySQL database and update the `DB_*` variables
+- Provision a MySQL database and import `diasrx_database.sql`
 - Set `ALLOWED_ORIGINS` to your frontend URL(s)
