@@ -32,7 +32,7 @@ exports.createPrescription = async (data) => {
 
         // 3. (REMOVED: is_visited update now happens in dispensing)
 
-        return { prescription_id: prescriptionId, status: "PENDING" };
+        return { prescription_id: prescriptionId, status: "CREATED" };
     });
 };
 
