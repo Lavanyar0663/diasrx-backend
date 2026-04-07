@@ -66,11 +66,20 @@ const explainDiagnosis = (diagnosis) => {
  * @returns {Object}
  */
 exports.buildExplanation = (prescription, drugs) => {
-    const simplifiedDrugs = drugs.map((item) => ({
-        drug_name: item.drug_name,
-        quantity: item.quantity,
-        frequency: item.frequency,
-        what_it_does: explainDrug(item.drug_name),
+    if (!prescription) {
+        return {
+            original: {},
+            simplified_explanation: { diagnosis: "Unknown", remarks: "", drugs: [] }
+        };
+    }
+
+    const safeDrugs = Array.isArray(drugs) ? drugs : [];
+
+    const simplifiedDrugs = safeDrugs.map((item) => ({
+        drug_name: String(item?.drug_name || "Unknown Medication"),
+        quantity: String(item?.quantity || "0"),
+        frequency: String(item?.frequency || "N/A"),
+        what_it_does: explainDrug(item?.drug_name),
     }));
 
     return {
@@ -78,9 +87,9 @@ exports.buildExplanation = (prescription, drugs) => {
             id: prescription.id,
             patient_id: prescription.patient_id,
             doctor_id: prescription.doctor_id,
-            diagnosis: prescription.diagnosis,
-            remarks: prescription.remarks,
-            status: prescription.status,
+            diagnosis: prescription.diagnosis || "No diagnosis",
+            remarks: prescription.remarks || "",
+            status: prescription.status || "PENDING",
             created_at: prescription.created_at,
         },
         simplified_explanation: {

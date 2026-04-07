@@ -8,10 +8,14 @@ const pdfGeneratorService = require("../services/pdfGeneratorService");
    HELPER: checks if the requesting user is authorized to access
    a given prescription (enforced per role).
 ════════════════════════════════════════════════════════════════ */
-const isAuthorized = (prescription, user) => {
+const isAuthorized = async (prescription, user) => {
     if (!prescription) return false;
     if (user.role === "admin") return true;
-    if (user.role === "doctor") return String(prescription.doctor_id) === String(user.id);
+    if (user.role === "doctor") {
+        const [docs] = await db.promise().query("SELECT id FROM doctors WHERE user_id = ?", [user.id]);
+        if (docs.length === 0) return false;
+        return String(prescription.doctor_id) === String(docs[0].id);
+    }
     if (user.role === "patient") return String(prescription.patient_id) === String(user.id);
     return false;
 };
@@ -38,7 +42,7 @@ const fetchFullPrescription = (prescriptionId) => {
             const prescription = prescRows[0];
 
             const drugSql = `
-        SELECT pd.quantity, pd.frequency, dm.drug_name
+        SELECT pd.quantity, pd.frequency, dm.name AS drug_name
         FROM prescription_drugs pd
         JOIN drug_master dm ON dm.id = pd.drug_id
         WHERE pd.prescription_id = ?
@@ -65,7 +69,7 @@ exports.getExplanation = asyncHandler(async (req, res) => {
         throw err;
     }
 
-    if (!isAuthorized(prescription, req.user)) {
+    if (!(await isAuthorized(prescription, req.user))) {
         const err = new Error("Forbidden: You are not authorized to view this prescription");
         err.status = 403;
         throw err;
@@ -88,24 +92,44 @@ exports.generatePDF = asyncHandler(async (req, res) => {
         throw err;
     }
 
-    if (!isAuthorized(prescription, req.user)) {
+    if (!(await isAuthorized(prescription, req.user))) {
+        console.error(`[PDF_DEBUG] Authorization failed for user ${req.user.id} (role: ${req.user.role}) mapping to doctor_id mismatch in prescription ${id}`);
         const err = new Error("Forbidden: You cannot generate a PDF for this prescription");
         err.status = 403;
         throw err;
     }
 
-    const explanation = aiExplanationService.buildExplanation(prescription, drugs);
-    const pdfRelPath = await pdfGeneratorService.generatePrescriptionPDF(prescription, drugs, explanation);
+    try {
+        console.log(`[PDF_DEBUG] Building AI explanation for Rx #${id}`);
+        const explanation = aiExplanationService.buildExplanation(prescription, drugs);
+        
+        console.log(`[PDF_DEBUG] Calling PDF Generator for Rx #${id}. Drugs: ${drugs.length}`);
+        const pdfRelPath = await pdfGeneratorService.generatePrescriptionPDF(prescription, drugs, explanation);
+        
+        console.log(`[PDF_DEBUG] PDF generated at: ${pdfRelPath}. Updating DB...`);
 
-    // Persist pdf_url to DB (fire and forget — non-blocking)
-    db.query("UPDATE prescription SET pdf_url = ? WHERE id = ?", [pdfRelPath, id], (err) => {
-        if (err) console.error("Failed to update pdf_url:", err);
-    });
+        // Persist pdf_url to DB
+        await new Promise((resolve, reject) => {
+            db.query("UPDATE prescription SET pdf_url = ? WHERE id = ?", [pdfRelPath, id], (err) => {
+                if (err) {
+                    console.error("[PDF_DEBUG] DB update error:", err);
+                    return reject(err);
+                }
+                resolve();
+            });
+        });
 
-    res.status(200).json({
-        message: "PDF generated successfully",
-        pdf_url: pdfRelPath,
-    });
+        res.status(200).json({
+            message: "PDF generated successfully",
+            pdf_url: pdfRelPath,
+        });
+    } catch (genErr) {
+        console.error(`[PDF_DEBUG] FATAL ERROR GENERATING PDF for Rx #${id}:`, genErr);
+        res.status(500).json({ 
+            message: "Failed to generate PDF", 
+            details: genErr.message 
+        });
+    }
 });
 
 /* ══════════════════════════════════════════════════════════════
@@ -121,22 +145,40 @@ exports.getPDF = asyncHandler(async (req, res, next) => {
         throw err;
     }
 
-    if (!isAuthorized(prescription, req.user)) {
+    if (!(await isAuthorized(prescription, req.user))) {
+        console.error(`[PDF_DEBUG] Authorization failed for user ${req.user.id} on prescription ${id}`);
         const err = new Error("Forbidden: You cannot access this PDF");
         err.status = 403;
         throw err;
     }
 
     if (!prescription.pdf_url) {
-        const err = new Error("PDF has not been generated yet. Call the /generate endpoint first.");
+        console.error(`[PDF_DEBUG] PDF status check failed for ${id}: URL missing in DB`);
+        const err = new Error("PDF has not been generated yet. Please try again in a moment.");
         err.status = 404;
         throw err;
     }
 
-    const absolutePath = path.join(__dirname, "..", prescription.pdf_url);
+    // Use path.resolve to get a absolute path properly on Windows
+    const absolutePath = path.resolve(__dirname, "..", prescription.pdf_url);
+    console.log(`[PDF_DEBUG] Final Absolute Path: ${absolutePath}`);
+
+    if (!require("fs").existsSync(absolutePath)) {
+        console.error(`[PDF_DEBUG] File NOT FOUND on disk at: ${absolutePath}`);
+        const err = new Error("Generated PDF file not found on server storage.");
+        err.status = 404;
+        throw err;
+    }
+    
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `inline; filename="prescription_${id}.pdf"`);
+    res.setHeader("Content-Disposition", `attachment; filename="prescription_${id}.pdf"`);
+    
     res.sendFile(absolutePath, (err) => {
-        if (err) next(err);
+        if (err) {
+            console.error(`[PDF_DEBUG] res.sendFile error for ${id}:`, err);
+            if (!res.headersSent) {
+                res.status(500).json({ message: "Failed to send file" });
+            }
+        }
     });
 });

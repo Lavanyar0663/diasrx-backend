@@ -1,6 +1,6 @@
 let allowedOrigins = process.env.ALLOWED_ORIGINS
     ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
-    : ["http://localhost:3000"];
+    : ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:3003", "http://localhost:3004", "http://localhost:3005"];
 allowedOrigins.push("http://localhost:5173");
 
 const corsOptions = {
@@ -16,7 +16,7 @@ const corsOptions = {
             callback(new Error(`CORS policy: Origin '${origin}' is not allowed.`));
         }
     },
-    methods: ["GET", "POST", "PATCH"],
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Idempotency-Key"],
     credentials: true,
 };

@@ -1,19 +1,27 @@
-const db = require('./db');
+const mysql = require('mysql2');
+const path = require('path');
 
-async function checkDb() {
-    try {
-        const users = await new Promise((res, rej) => db.query("SELECT * FROM users WHERE name LIKE '%Beulah%'", (e, r) => e ? rej(e) : res(r)));
-        const doctors = await new Promise((res, rej) => db.query("SELECT * FROM doctors WHERE name LIKE '%Beulah%'", (e, r) => e ? rej(e) : res(r)));
-        
-        console.log("USERS TABLE:");
-        console.log(users);
-        
-        console.log("DOCTORS TABLE:");
-        console.log(doctors);
-        
-    } catch (e) {
-        console.error(e);
-    }
-    process.exit(0);
-}
-checkDb();
+// Assuming database connection is established similar to index.js or config
+const db = mysql.createPool({
+    host: '127.0.0.1',
+    user: 'root',
+    password: '',
+    database: 'diasrx',
+    port: 3307
+});
+
+db.promise().query("DESCRIBE patients")
+    .then(([rows]) => {
+        console.log("Patients Table Schema:");
+        console.table(rows);
+        return db.promise().query("SELECT name, gender FROM patients LIMIT 5");
+    })
+    .then(([rows]) => {
+        console.log("Sample Patients Gender data:");
+        console.table(rows);
+        process.exit(0);
+    })
+    .catch(err => {
+        console.error(err);
+        process.exit(1);
+    });

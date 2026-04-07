@@ -48,7 +48,7 @@ exports.dispensePrescription = asyncHandler(async (req, res) => {
 });
 
 /* FETCH ENDPOINTS */
-exports.getPrescriptionsByPatient = (req, res, next) => {
+exports.getPrescriptionsByPatient = asyncHandler(async (req, res, next) => {
     const patientId = req.params.id;
     const { id: userId, role } = req.user;
 
@@ -56,41 +56,27 @@ exports.getPrescriptionsByPatient = (req, res, next) => {
         SELECT p.*, d.name as doctor_name, d.specialization as doctor_department, DATE_FORMAT(p.created_at, '%d/%m/%Y, %H:%i') as formatted_date
         FROM prescription p
         JOIN doctors d ON p.doctor_id = d.id
-        WHERE p.patient_id = ?`;
+        WHERE p.patient_id = ?
+        ORDER BY p.created_at DESC`;
     let params = [patientId];
 
-    // Doctors can only view their own prescriptions for this patient
-    if (role === "doctor") {
-        sql += " AND p.doctor_id = ?";
-        params.push(userId);
-    }
+    const [results] = await db.promise().query(sql, params);
 
-    db.query(sql, params, async (err, results) => {
-        if (err) return next(err);
+    // Attach nested drugs to each prescription
+    const prescriptionsWithDrugs = await Promise.all(results.map(async (prescription) => {
+        const drugsSql = `
+            SELECT pd.*, dm.name as drug_name, dm.type as drug_type, dm.strength
+            FROM prescription_drugs pd
+            JOIN drug_master dm ON pd.drug_id = dm.id
+            WHERE pd.prescription_id = ?
+        `;
+        const [drugResults] = await db.promise().query(drugsSql, [prescription.id]);
+        prescription.drugs = drugResults;
+        return prescription;
+    }));
 
-        try {
-            // Attach nested drugs to each prescription
-            const prescriptionsWithDrugs = await Promise.all(results.map((prescription) => {
-                return new Promise((resolve, reject) => {
-                    const drugsSql = `
-                        SELECT pd.*, dm.name as drug_name, dm.type as drug_type, dm.strength
-                        FROM prescription_drugs pd
-                        JOIN drug_master dm ON pd.drug_id = dm.id
-                        WHERE pd.prescription_id = ?
-                    `;
-                    db.query(drugsSql, [prescription.id], (err, drugResults) => {
-                        if (err) return reject(err);
-                        prescription.drugs = drugResults;
-                        resolve(prescription);
-                    });
-                });
-            }));
-            res.status(200).json(prescriptionsWithDrugs);
-        } catch (error) {
-            next(error);
-        }
-    });
-};
+    res.status(200).json(prescriptionsWithDrugs);
+});
 
 exports.getPrescriptionsByDoctor = asyncHandler(async (req, res, next) => {
     const requestedId = req.params.id; // This is doctors.id
@@ -108,7 +94,8 @@ exports.getPrescriptionsByDoctor = asyncHandler(async (req, res, next) => {
     }
 
     const sql = `
-        SELECT p.*, pat.name as patient_name, pat.id as patient_display_id,
+        SELECT p.*, pat.name as patient_name, pat.id as patient_display_id, 
+               pat.gender as gender, pat.gender as pat_gender,
                DATE_FORMAT(p.created_at, '%Y-%m-%dT%H:%i:%s.000Z') as iso_created_at
         FROM prescription p
         JOIN patients pat ON p.patient_id = pat.id
@@ -121,7 +108,9 @@ exports.getPrescriptionsByDoctor = asyncHandler(async (req, res, next) => {
 
 exports.getPendingPrescriptions = asyncHandler(async (req, res, next) => {
     const sql = `
-        SELECT p.*, d.name as doctor_name, d.specialization as doctor_department, pat.name as patient_name, pat.id as patient_display_id,
+        SELECT p.*, d.name as doctor_name, d.specialization as doctor_department, 
+               pat.name as patient_name, pat.id as patient_display_id, 
+               pat.gender as gender, pat.gender as pat_gender,
                DATE_FORMAT(p.created_at, '%Y-%m-%dT%H:%i:%s.000Z') as iso_created_at
         FROM prescription p
         JOIN doctors d ON p.doctor_id = d.id
@@ -135,7 +124,9 @@ exports.getPendingPrescriptions = asyncHandler(async (req, res, next) => {
 
 exports.getPrescriptionHistory = asyncHandler(async (req, res, next) => {
     const sql = `
-        SELECT p.*, d.name as doctor_name, d.specialization as doctor_department, pat.name as patient_name, pat.id as patient_display_id,
+        SELECT p.*, d.name as doctor_name, d.specialization as doctor_department, 
+               pat.name as patient_name, pat.id as patient_display_id, 
+               pat.gender as gender, pat.gender as pat_gender,
                DATE_FORMAT(p.created_at, '%Y-%m-%dT%H:%i:%s.000Z') as iso_created_at
         FROM prescription p
         JOIN doctors d ON p.doctor_id = d.id
