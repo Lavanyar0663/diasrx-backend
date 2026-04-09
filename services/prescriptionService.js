@@ -6,7 +6,7 @@ exports.createPrescription = async (data) => {
 
         const [prescResult] = await connection.query(
             `INSERT INTO prescription (patient_id, doctor_id, diagnosis, remarks, status, created_at) 
-        VALUES (?, ?, ?, ?, 'PENDING', NOW())`,
+        VALUES (?, ?, ?, ?, 'CREATED', NOW())`,
             [patient_id, doctor_id, diagnosis, remarks]
         );
 
